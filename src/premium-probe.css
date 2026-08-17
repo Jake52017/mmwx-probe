@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'OPlusSans3';
-  src: url('/fonts/OPlusSans3-Medium.woff2') format('woff2');
+  font-family: "OPlusSans3";
+  src: url("/fonts/OPlusSans3-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -14,10 +14,21 @@
   min-height: 100svh;
   color: #f3ecdc;
   font-family:
-    Inter, OPlusSans3, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue',
-    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol';
+    Inter,
+    OPlusSans3,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol";
   font-synthesis: weight;
   background: radial-gradient(
     circle at 70% 12%,
@@ -54,9 +65,10 @@
   position: fixed;
   z-index: 18;
   inset: 0;
-  content: '';
+  content: "";
   pointer-events: none;
-  background: url('/images/premium-pro-marks.svg') 24px 18px / 520px 360px repeat;
+  background: url("/images/premium-pro-marks.svg") 24px 18px / 520px 360px
+    repeat;
 }
 
 .premium-probe-page button,
@@ -220,11 +232,13 @@
   position: absolute;
   z-index: 2;
   inset: 0;
-  content: '';
+  content: "";
   background: currentColor;
   filter: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 7px currentColor);
-  -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 10 L58 42 L90 50 L58 58 L50 90 L42 58 L10 50 L42 42 Z' fill='white' stroke='white' stroke-width='7' stroke-linejoin='round' stroke-linecap='round'/></svg>") center / contain no-repeat;
-  mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 10 L58 42 L90 50 L58 58 L50 90 L42 58 L10 50 L42 42 Z' fill='white' stroke='white' stroke-width='7' stroke-linejoin='round' stroke-linecap='round'/></svg>") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 10 L58 42 L90 50 L58 58 L50 90 L42 58 L10 50 L42 42 Z' fill='white' stroke='white' stroke-width='7' stroke-linejoin='round' stroke-linecap='round'/></svg>")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 10 L58 42 L90 50 L58 58 L50 90 L42 58 L10 50 L42 42 Z' fill='white' stroke='white' stroke-width='7' stroke-linejoin='round' stroke-linecap='round'/></svg>")
+    center / contain no-repeat;
 }
 
 .license-nameplate .np-shine {
@@ -284,7 +298,7 @@
 .premium-probe-live::before {
   width: 0.42rem;
   height: 0.42rem;
-  content: '';
+  content: "";
   border-radius: 999px;
   background: #72cf72;
   box-shadow: 0 0 8px rgba(114, 207, 114, 0.72);
@@ -295,6 +309,24 @@
   overflow: hidden;
   border: 1px solid rgba(216, 180, 106, 0.3);
   border-radius: 0.48rem;
+}
+
+.premium-probe-theme-switch .probe-theme-switch {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pp-gold-bright);
+  border: 1px solid rgba(216, 180, 106, 0.3);
+  border-radius: 0.48rem;
+  background: rgba(216, 180, 106, 0.04);
+}
+
+.premium-probe-theme-switch .probe-theme-switch:hover {
+  color: var(--pp-gold-bright);
+  border-color: rgba(242, 210, 139, 0.62);
+  background: rgba(216, 180, 106, 0.1);
 }
 
 .premium-probe-view-toggle button {
@@ -1212,7 +1244,7 @@
   height: 0.42rem;
   flex: 0 0 auto;
   margin-left: 0.1rem;
-  content: '';
+  content: "";
   border-right: 1px solid #c9ad68;
   border-bottom: 1px solid #c9ad68;
   transform: translateY(-0.12rem) rotate(45deg);
@@ -1468,17 +1500,17 @@
   width: 0.42rem;
   height: 0.42rem;
   margin-right: 0.3rem;
-  content: '';
+  content: "";
   border-radius: 999px;
   background: #72cf72;
   box-shadow: 0 0 6px rgba(114, 207, 114, 0.5);
 }
 
-.premium-probe-network-legend span[data-level='medium']::before {
+.premium-probe-network-legend span[data-level="medium"]::before {
   background: #e5b954;
 }
 
-.premium-probe-network-legend span[data-level='poor']::before {
+.premium-probe-network-legend span[data-level="poor"]::before {
   background: #ef5b64;
 }
 
@@ -1538,13 +1570,13 @@
   box-shadow: 0 0 7px rgba(114, 207, 114, 0.58);
 }
 
-.premium-probe-network-server > i[data-level='medium'] {
+.premium-probe-network-server > i[data-level="medium"] {
   background: #e5b954;
   box-shadow: 0 0 7px rgba(229, 185, 84, 0.58);
 }
 
-.premium-probe-network-server > i[data-level='poor'],
-.premium-probe-network-server > i[data-level='missing'] {
+.premium-probe-network-server > i[data-level="poor"],
+.premium-probe-network-server > i[data-level="missing"] {
   background: #ef5b64;
   box-shadow: 0 0 7px rgba(239, 91, 100, 0.58);
 }
@@ -1577,12 +1609,12 @@
   font-variant-numeric: tabular-nums;
 }
 
-.premium-probe-network-row > strong[data-level='medium'] {
+.premium-probe-network-row > strong[data-level="medium"] {
   color: #e5b954;
 }
 
-.premium-probe-network-row > strong[data-level='poor'],
-.premium-probe-network-row > strong[data-level='missing'] {
+.premium-probe-network-row > strong[data-level="poor"],
+.premium-probe-network-row > strong[data-level="missing"] {
   color: #ef777e;
 }
 
@@ -1746,7 +1778,7 @@
   left: -22%;
   width: 20%;
   height: 1px;
-  content: '';
+  content: "";
   pointer-events: none;
   background: linear-gradient(90deg, transparent, #f2d489, transparent);
   will-change: transform, opacity;
@@ -1884,8 +1916,8 @@
   box-shadow: 0 0 8px rgba(112, 202, 118, 0.65);
 }
 
-.premium-probe-command-nodes button[data-tone='warning'] > i,
-.premium-probe-command-nodes button[data-tone='critical'] > i {
+.premium-probe-command-nodes button[data-tone="warning"] > i,
+.premium-probe-command-nodes button[data-tone="critical"] > i {
   background: #ef5b64;
   box-shadow: 0 0 8px rgba(239, 91, 100, 0.6);
 }
@@ -2394,7 +2426,7 @@
   right: 4rem;
   left: 4rem;
   height: 1px;
-  content: '';
+  content: "";
   background: linear-gradient(
     90deg,
     transparent,
@@ -2560,7 +2592,7 @@
   pointer-events: none;
   border: 1px solid rgba(216, 180, 106, 0.2);
   border-radius: calc(0.75rem - 4px);
-  content: '';
+  content: "";
 }
 
 .premium-probe-server-card > * {
@@ -2612,8 +2644,8 @@
   background: rgba(112, 202, 118, 0.07);
 }
 
-.premium-probe-health-score[data-tone='warning'],
-.premium-probe-health-score[data-tone='critical'] {
+.premium-probe-health-score[data-tone="warning"],
+.premium-probe-health-score[data-tone="critical"] {
   color: #ed737b;
   border-color: rgba(239, 91, 100, 0.3);
   background: rgba(239, 91, 100, 0.07);
@@ -2856,8 +2888,8 @@
   font-size: 2rem;
 }
 
-.premium-probe-drawer-health > strong[data-tone='warning'],
-.premium-probe-drawer-health > strong[data-tone='critical'] {
+.premium-probe-drawer-health > strong[data-tone="warning"],
+.premium-probe-drawer-health > strong[data-tone="critical"] {
   color: #ef6972;
 }
 
@@ -3195,4 +3227,315 @@
   .premium-probe-node-connections path {
     animation: none;
   }
+}
+
+:root.theme-premium.light,
+:root.theme-premium.light body {
+  color-scheme: light;
+  color: #241e14;
+  background-color: #f7f4ec;
+  background-image:
+    radial-gradient(
+      circle at 18% 8%,
+      rgba(168, 124, 34, 0.1),
+      transparent 24rem
+    ),
+    radial-gradient(
+      circle at 82% 72%,
+      rgba(168, 124, 34, 0.05),
+      transparent 28rem
+    );
+}
+
+:root.theme-premium.light #root {
+  color: #241e14;
+}
+
+/* Champagne light palette, derived from premium-light-preview.html. */
+:root.light .premium-probe-page {
+  --pp-gold: #a87c22;
+  --pp-gold-bright: #c9962b;
+  --pp-border: rgba(168, 124, 34, 0.34);
+  --pp-panel: #fffdf8;
+  color: #241e14;
+  background: radial-gradient(
+    circle at 70% 12%,
+    rgba(168, 124, 34, 0.09),
+    transparent 26rem
+  );
+}
+
+:root.light .premium-probe-loading {
+  color: #665c4c;
+  background: #f7f4ec;
+}
+
+:root.light .premium-probe-topbar {
+  border-color: rgba(168, 124, 34, 0.34);
+  background: rgba(255, 253, 248, 0.92);
+  box-shadow: 0 10px 28px -24px rgba(120, 86, 20, 0.45);
+}
+
+:root.light .premium-probe-pro {
+  color: #8a6210;
+  border-color: rgba(168, 124, 34, 0.34);
+  background: linear-gradient(
+    110deg,
+    rgba(201, 150, 43, 0.2),
+    rgba(168, 124, 34, 0.06)
+  );
+  box-shadow: 0 1px 2px rgba(36, 30, 20, 0.07);
+}
+
+:root.light .premium-probe-theme-switch .probe-theme-switch {
+  color: #8a6210;
+  border-color: rgba(168, 124, 34, 0.34);
+  background: rgba(168, 124, 34, 0.06);
+}
+
+:root.light .premium-probe-theme-switch .probe-theme-switch:hover {
+  color: #6f4e0c;
+  border-color: rgba(168, 124, 34, 0.58);
+  background: rgba(168, 124, 34, 0.12);
+}
+
+:root.light .premium-probe-region-trigger {
+  color: #665c4c;
+  border-color: rgba(168, 124, 34, 0.34);
+  background: rgba(255, 253, 248, 0.86);
+}
+
+:root.light .premium-probe-filters {
+  border-color: rgba(168, 124, 34, 0.24);
+  background: rgba(255, 253, 248, 0.94);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.7);
+}
+
+:root.light .premium-probe-region-trigger:hover,
+:root.light .premium-probe-region-trigger[data-state="open"] {
+  color: #6f4e0c;
+  border-color: rgba(168, 124, 34, 0.58);
+  background: rgba(168, 124, 34, 0.1);
+}
+
+:root.light .premium-probe-region-menu {
+  color: #3c3020;
+  border-color: rgba(168, 124, 34, 0.34);
+  background: rgba(255, 253, 248, 0.99);
+  box-shadow: 0 18px 38px -22px rgba(120, 86, 20, 0.42);
+}
+
+:root.light .premium-probe-region-menu [data-slot="select-item"]:focus {
+  color: #6f4e0c;
+  background: rgba(168, 124, 34, 0.13);
+}
+
+:root.light .premium-probe-live,
+:root.light .premium-probe-kpis span,
+:root.light .premium-probe-network-title > span,
+:root.light .premium-probe-panel-heading > span,
+:root.light .premium-probe-section-heading > span,
+:root.light .premium-probe-speed-heading span,
+:root.light .premium-probe-overview-chart-heading span,
+:root.light .premium-probe-speed-meta small,
+:root.light .premium-probe-map aside button,
+:root.light .premium-probe-globe-stage > span,
+:root.light .premium-probe-resource span,
+:root.light .premium-probe-insight > div:first-child span,
+:root.light .premium-probe-network-view-heading > div > span,
+:root.light .premium-probe-network-kpis span,
+:root.light .premium-probe-network-kpis small,
+:root.light .premium-probe-target-toolbar button,
+:root.light .premium-probe-network-legend,
+:root.light .premium-probe-network-table-head,
+:root.light .premium-probe-network-server small,
+:root.light .premium-probe-resource-heading p,
+:root.light .premium-probe-resource-heading > strong,
+:root.light .premium-probe-server-status,
+:root.light .premium-probe-card-traffic > span,
+:root.light .premium-probe-card-latency > span,
+:root.light .premium-probe-drawer-accounting span,
+:root.light .premium-probe-drawer-accounting p,
+:root.light .premium-probe-drawer-traffic-note,
+:root.light .premium-probe-drawer-section-heading button,
+:root.light .premium-probe-drawer p,
+:root.light .premium-probe-drawer small {
+  color: #746b5c;
+}
+
+:root.light .premium-probe-panel,
+:root.light .premium-probe-server-card,
+:root.light .premium-probe-filters,
+:root.light .premium-probe-network-view-heading,
+:root.light .premium-probe-network-matrix,
+:root.light .premium-probe-network-kpis article,
+:root.light .premium-probe-smart-summary,
+:root.light .premium-probe-command-kpis article,
+:root.light .premium-probe-command-nodes button,
+:root.light .premium-probe-resource-heading,
+:root.light .premium-probe-insight-card,
+:root.light .premium-probe-drawer-section,
+:root.light .premium-probe-network-history > div,
+:root.light .premium-probe-network-history > p {
+  background-color: #fffdf8;
+  background-image: linear-gradient(
+    145deg,
+    rgba(168, 124, 34, 0.035),
+    transparent 44%
+  );
+  box-shadow:
+    0 1px 2px rgba(36, 30, 20, 0.05),
+    0 10px 26px -20px rgba(120, 86, 20, 0.5);
+}
+
+:root.light .premium-probe-kpis button,
+:root.light .premium-probe-speed-snapshot,
+:root.light .premium-probe-overview-chart-card,
+:root.light .premium-probe-hotspot-list i,
+:root.light .premium-probe-route-badges > span,
+:root.light .premium-probe-target-toolbar,
+:root.light .premium-probe-target-toolbar button,
+:root.light .premium-probe-network-row:hover,
+:root.light .premium-probe-resource-grid article,
+:root.light .premium-probe-drawer-metrics > div,
+:root.light .premium-probe-drawer-pings > div,
+:root.light .premium-probe-drawer-routes > span {
+  background-color: rgba(168, 124, 34, 0.045);
+}
+
+:root.light .premium-probe-drawer-accounting {
+  border-color: rgba(168, 124, 34, 0.2);
+  background: rgba(168, 124, 34, 0.035);
+}
+
+:root.light .premium-probe-kpis button,
+:root.light .premium-probe-network-grid > *,
+:root.light .premium-probe-server-footer,
+:root.light .premium-probe-network-table-head,
+:root.light .premium-probe-network-row {
+  border-color: rgba(168, 124, 34, 0.2);
+}
+
+:root.light .premium-probe-kpis button,
+:root.light .premium-probe-resource strong,
+:root.light .premium-probe-daily-list span,
+:root.light .premium-probe-route-badges b,
+:root.light .premium-probe-map aside button,
+:root.light .premium-probe-orbit-label-content,
+:root.light .premium-probe-network-server strong,
+:root.light .premium-probe-smart-summary strong,
+:root.light .premium-probe-command-heading h2,
+:root.light .premium-probe-command-nodes strong,
+:root.light .premium-probe-resource-heading h2,
+:root.light .premium-probe-server-card h3,
+:root.light .premium-probe-drawer h2,
+:root.light .premium-probe-drawer h3 {
+  color: #2c251a;
+}
+
+:root.light .premium-probe-speed-heading strong,
+:root.light .premium-probe-overview-chart-heading strong,
+:root.light .premium-probe-route-badges small,
+:root.light .premium-probe-network-grid .premium-probe-resource strong,
+:root.light .premium-probe-map aside button:hover,
+:root.light .premium-probe-map aside button strong,
+:root.light .premium-probe-resource-heading > div > span,
+:root.light .premium-probe-health-score,
+:root.light .premium-probe-card-traffic strong,
+:root.light .premium-probe-card-latency strong,
+:root.light .premium-probe-drawer-accounting strong,
+:root.light .premium-probe-drawer-section-heading button:hover,
+:root.light .premium-probe-drawer-section-heading button.is-active {
+  color: #8a6210;
+}
+
+:root.light .premium-probe-map aside {
+  background: rgba(168, 124, 34, 0.035);
+}
+
+:root.light .premium-probe-network-selectors > label,
+:root.light .premium-probe-network-selectors > label:hover,
+:root.light .premium-probe-network-selectors > label:focus-within,
+:root.light .premium-probe-network-view-heading select option {
+  color: #2c251a;
+  background: #fbf8f0;
+}
+
+:root.light .premium-probe-chart-tooltip,
+:root.light .premium-probe-multi-tooltip {
+  color: #241e14;
+  background: rgba(255, 253, 248, 0.98);
+  box-shadow: 0 10px 24px rgba(120, 86, 20, 0.18);
+}
+
+:root.light .premium-probe-chart-tooltip strong,
+:root.light .premium-probe-multi-tooltip strong,
+:root.light .premium-probe-multi-tooltip b {
+  color: #8a6210;
+}
+
+:root.light .premium-probe-ocean-start {
+  stop-color: #fffaf0;
+}
+
+:root.light .premium-probe-ocean-middle {
+  stop-color: #f0e5ce;
+}
+
+:root.light .premium-probe-ocean-end {
+  stop-color: #dbc89e;
+}
+
+:root.light .premium-probe-ocean {
+  filter: drop-shadow(0 14px 14px rgba(120, 86, 20, 0.2));
+}
+
+:root.light .premium-probe-globe-glow {
+  fill: rgba(168, 124, 34, 0.16);
+}
+
+:root.light .premium-probe-graticule {
+  stroke: rgba(138, 98, 16, 0.2);
+}
+
+:root.light [data-premium-probe-country] {
+  fill: #eee4ce;
+  stroke: rgba(138, 98, 16, 0.48);
+}
+
+:root.light [data-premium-probe-country].is-active {
+  fill: #d8bd78;
+  stroke: #8a6210;
+  filter: drop-shadow(0 0 3px rgba(168, 124, 34, 0.42));
+}
+
+:root.light .premium-probe-globe-outline {
+  stroke: #a87c22;
+  filter: drop-shadow(0 0 4px rgba(168, 124, 34, 0.34));
+}
+
+:root.light .premium-probe-orbit-labels rect {
+  fill: rgba(255, 253, 248, 0.96);
+  stroke: rgba(168, 124, 34, 0.52);
+}
+
+:root.light .premium-probe-orbit-label-content {
+  color: #3c3020;
+}
+
+:root.light .premium-probe-orbit-label-count {
+  color: #6f4e0c;
+  border-color: rgba(168, 124, 34, 0.5);
+  background: rgba(168, 124, 34, 0.1);
+}
+
+:root.light .premium-probe-drawer-layer {
+  background: rgba(74, 58, 28, 0.28);
+}
+
+:root.light .premium-probe-drawer {
+  color: #241e14;
+  background:
+    linear-gradient(145deg, rgba(168, 124, 34, 0.06), transparent 28%), #fffdf8;
+  box-shadow: -24px 0 80px rgba(74, 58, 28, 0.2);
 }
