@@ -1184,13 +1184,24 @@
 .premium-probe-network-view-heading {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 1rem;
   padding: 1rem 1.1rem;
   border: 1px solid var(--pp-border);
   border-radius: 0.75rem;
   background: rgba(14, 15, 14, 0.95);
   box-shadow: 0 18px 40px -34px rgba(216, 180, 106, 0.9);
+}
+/* 标题占左侧余量,把下拉与「按服务器/转发链」开关推到右侧;开关用 order 恒定最右,
+   不因服务器模式多出的两个下拉而左右移动。 */
+.premium-probe-network-view-heading > div:first-child {
+  margin-right: auto;
+}
+.premium-probe-network-selectors {
+  order: 2;
+}
+.premium-probe-forward-modes {
+  order: 3;
 }
 
 .premium-probe-network-view-heading > div h2 {
@@ -3628,6 +3639,123 @@
   border-color: var(--pp-gold);
 }
 
+/* 转发组流量:堆叠柱状图(替代宽表格,1 个月周期也放得下) */
+.premium-probe-forward-chart-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.premium-probe-forward-grouptabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.premium-probe-forward-grouptabs button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #a9a08c;
+  background: var(--pp-panel);
+  border: 1px solid var(--pp-border);
+  border-radius: 9px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+.premium-probe-forward-grouptabs button:hover {
+  border-color: var(--pp-gold);
+}
+.premium-probe-forward-grouptabs button.is-active {
+  color: #f3e6c6;
+  border-color: var(--pp-gold);
+  background: rgba(216, 180, 106, 0.12);
+}
+.premium-probe-forward-grouptabs button .g {
+  font-weight: 700;
+}
+.premium-probe-forward-grouptabs button .rl {
+  padding: 2px 7px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 5px;
+}
+.premium-probe-forward-grouptabs button .t {
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
+  color: var(--pp-gold);
+}
+.premium-probe-forward-chart-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  min-height: 20px;
+  font-size: 12px;
+  color: #a9a08c;
+}
+.premium-probe-forward-chart-head .total {
+  font-size: 12.5px;
+}
+.premium-probe-forward-chart-head .total b,
+.premium-probe-forward-chart-head .s b,
+.premium-probe-forward-chart-head .sum {
+  color: var(--pp-gold);
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
+}
+.premium-probe-forward-chart-head .d {
+  font-weight: 750;
+  color: #e9dcbf;
+  font-variant-numeric: tabular-nums;
+}
+.premium-probe-forward-chart-head .s {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.premium-probe-forward-chart-head .s b {
+  margin-left: 3px;
+}
+.premium-probe-forward-chart-head .s i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.premium-probe-forward-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.premium-probe-forward-chart svg {
+  width: 100%;
+  height: 200px;
+  display: block;
+  overflow: visible;
+}
+.premium-probe-forward-chart svg rect {
+  transition: opacity 0.12s;
+}
+.premium-probe-forward-chart-xaxis {
+  display: flex;
+}
+.premium-probe-forward-chart-xaxis span {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  font-size: 9.5px;
+  color: #7d7462;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 /* 统计卡 */
 .premium-probe-forward-stats {
   display: grid;
@@ -4062,11 +4190,21 @@
 :root.light .premium-probe-forward .tconn .cl,
 :root.light .premium-probe-forward-heatmap th,
 :root.light .premium-probe-forward-heatmap tr.grp td,
+:root.light .premium-probe-forward-grouptabs button,
+:root.light .premium-probe-forward-chart-head,
+:root.light .premium-probe-forward-chart-xaxis span,
 :root.light .premium-probe-forward-empty,
 :root.light .premium-probe-forward-trend-empty {
   color: #8a7f64;
 }
 /* light 主题:近白值色(链路结构)在奶白底上不可见 → 用主题深色文字 */
 :root.light .premium-probe-forward-stats .stat.is-n .v {
+  color: #241e14;
+}
+/* light 主题:选中组标签 / 悬停日期在奶白底上要压深 */
+:root.light .premium-probe-forward-grouptabs button.is-active {
+  color: #3a2e0e;
+}
+:root.light .premium-probe-forward-chart-head .d {
   color: #241e14;
 }

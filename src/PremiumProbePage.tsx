@@ -1504,98 +1504,168 @@ function ForwardTrendChart({ trend }: { trend: ForwardChainBucket[] }) {
   );
 }
 
-function ForwardTrafficHeatmap({ traffic }: { traffic: ForwardChainTraffic }) {
-  const max = useMemo(() => {
-    let m = 0;
+const forwardTrafficFmt = (gb: number) =>
+  gb >= 1024
+    ? `${(gb / 1024).toFixed(2)} TB`
+    : gb >= 10
+      ? `${Math.round(gb)} GB`
+      : gb > 0
+        ? `${gb.toFixed(1)} GB`
+        : "0 GB";
+
+// 转发组流量:堆叠柱状图。周期常为 1 个月,横向表格放不下,改为按转发组切换的堆叠柱状图
+// (每天一根柱,组内多台服务器堆叠),并显示所选组的周期总流量。
+function ForwardTrafficChart({ traffic }: { traffic: ForwardChainTraffic }) {
+  const groups = useMemo(() => {
+    const list: {
+      group: string;
+      role: string;
+      servers: ForwardTrafficServer[];
+      total: number;
+    }[] = [];
     for (const srv of traffic.servers) {
-      for (const value of srv.daily_gb) if (value > m) m = value;
+      let bucket = list.find((entry) => entry.group === srv.group);
+      if (!bucket) {
+        bucket = { group: srv.group, role: srv.role, servers: [], total: 0 };
+        list.push(bucket);
+      }
+      bucket.servers.push(srv);
+      bucket.total += srv.total_gb;
     }
-    return m || 1;
+    return list;
   }, [traffic]);
-  const light =
-    typeof document !== "undefined" &&
-    document.documentElement.classList.contains("light");
-  const cellStyle = (value: number) => {
-    const t = Math.min(1, value / max);
-    const lo = light ? [244, 237, 221] : [36, 29, 14];
-    const hi = light ? [216, 180, 106] : [230, 184, 74];
-    const mix = (i: number) => Math.round(lo[i] + (hi[i] - lo[i]) * t);
-    return {
-      background: `rgb(${mix(0)},${mix(1)},${mix(2)})`,
-      color: light
-        ? t > 0.55
-          ? "#3a2e0e"
-          : "#9a8a5a"
-        : t > 0.5
-          ? "#1c1606"
-          : "rgba(230,184,74,.72)",
-    };
-  };
-  const byGroup: {
-    group: string;
-    role: string;
-    rows: ForwardTrafficServer[];
-  }[] = [];
-  for (const srv of traffic.servers) {
-    let bucket = byGroup.find((entry) => entry.group === srv.group);
-    if (!bucket) {
-      bucket = { group: srv.group, role: srv.role, rows: [] };
-      byGroup.push(bucket);
-    }
-    bucket.rows.push(srv);
-  }
-  const fmtGB = (gb: number) =>
-    gb >= 1024
-      ? `${(gb / 1024).toFixed(2)} TB`
-      : gb >= 10
-        ? `${Math.round(gb)}`
-        : gb > 0
-          ? gb.toFixed(1)
-          : "·";
-  const fmtTotal = (gb: number) =>
-    gb >= 1024 ? `${(gb / 1024).toFixed(2)} TB` : `${Math.round(gb)} GB`;
+
+  const [tab, setTab] = useState(0);
+  const [hover, setHover] = useState<number | null>(null);
+  const activeIdx = Math.min(tab, Math.max(0, groups.length - 1));
+  const active = groups[activeIdx];
+  const days = traffic.days;
+
+  const palette = [
+    "var(--pp-gold)",
+    "#d8a84a",
+    "#b9822a",
+    "#e7c67e",
+    "#9c6f22",
+    "#f0d79a",
+  ];
+  const dayTotal = useMemo(
+    () =>
+      days.map((_, i) =>
+        (active?.servers || []).reduce(
+          (s, srv) => s + (srv.daily_gb[i] || 0),
+          0,
+        ),
+      ),
+    [days, active],
+  );
+  const max = Math.max(1e-9, ...dayTotal);
+
+  if (!active) return null;
+
+  const W = 900;
+  const H = 200;
+  const padT = 8;
+  const padB = 6;
+  const n = days.length;
+  const slot = W / Math.max(1, n);
+  const barW = Math.min(30, slot * 0.6);
+  const plotH = H - padT - padB;
+  const labelStep = n <= 12 ? 1 : Math.ceil(n / 8);
+
   return (
-    <div className="premium-probe-forward-heatmap-wrap">
-      <table className="premium-probe-forward-heatmap">
-        <thead>
-          <tr>
-            <th className="srv">服务器</th>
-            {traffic.days.map((day) => (
-              <th key={day}>{day.slice(5)}</th>
+    <div className="premium-probe-forward-chart-wrap">
+      <div className="premium-probe-forward-grouptabs">
+        {groups.map((g, i) => (
+          <button
+            key={g.group}
+            type="button"
+            className={i === activeIdx ? "is-active" : undefined}
+            onClick={() => setTab(i)}
+          >
+            <span className="g">{g.group}</span>
+            <span className={`rl is-${g.role}`}>
+              {forwardRoleLabel[g.role] || g.role}
+            </span>
+            <span className="t">{forwardTrafficFmt(g.total)}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="premium-probe-forward-chart-head">
+        {hover != null && days[hover] ? (
+          <>
+            <span className="d">{days[hover].slice(5)}</span>
+            {active.servers.map((srv, si) => (
+              <span className="s" key={srv.name}>
+                <i style={{ background: palette[si % palette.length] }} />
+                <Twemoji>{srv.name}</Twemoji>
+                <b>{forwardTrafficFmt(srv.daily_gb[hover] || 0)}</b>
+              </span>
             ))}
-            <th className="tot">合计</th>
-          </tr>
-        </thead>
-        <tbody>
-          {byGroup.map((entry) => (
-            <Fragment key={entry.group}>
-              <tr className="grp">
-                <td colSpan={traffic.days.length + 2}>
-                  {entry.group}
-                  <span className={`rl is-${entry.role}`}>
-                    {forwardRoleLabel[entry.role] || entry.role}
-                  </span>
-                </td>
-              </tr>
-              {entry.rows.map((srv) => (
-                <tr key={`s-${entry.group}-${srv.name}`}>
-                  <td className="srv">
-                    <Twemoji>{srv.name}</Twemoji>
-                  </td>
-                  {srv.daily_gb.map((value, index) => (
-                    <td className="cell" key={index}>
-                      <div className="box" style={cellStyle(value)}>
-                        {fmtGB(value)}
-                      </div>
-                    </td>
-                  ))}
-                  <td className="tot">{fmtTotal(srv.total_gb)}</td>
-                </tr>
-              ))}
-            </Fragment>
+            <span className="sum">合计 {forwardTrafficFmt(dayTotal[hover])}</span>
+          </>
+        ) : (
+          <span className="total">
+            {active.group} · 周期总流量 <b>{forwardTrafficFmt(active.total)}</b>
+          </span>
+        )}
+      </div>
+
+      <div className="premium-probe-forward-chart">
+        <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+          {days.map((day, i) => {
+            let acc = 0;
+            return (
+              <g
+                key={day}
+                onMouseEnter={() => setHover(i)}
+                onMouseLeave={() => setHover(null)}
+              >
+                <rect
+                  x={slot * i}
+                  y={0}
+                  width={slot}
+                  height={H}
+                  fill="transparent"
+                />
+                {active.servers.map((srv, si) => {
+                  const v = srv.daily_gb[i] || 0;
+                  if (v <= 0) return null;
+                  const h = plotH * (v / max);
+                  const y = padT + plotH * (1 - (acc + v) / max);
+                  acc += v;
+                  return (
+                    <rect
+                      key={srv.name}
+                      x={slot * i + (slot - barW) / 2}
+                      y={y}
+                      width={barW}
+                      height={Math.max(0.6, h)}
+                      rx={1.5}
+                      fill={palette[si % palette.length]}
+                      opacity={hover == null || hover === i ? 1 : 0.32}
+                    />
+                  );
+                })}
+              </g>
+            );
+          })}
+          <line
+            x1="0"
+            y1={H - padB}
+            x2={W}
+            y2={H - padB}
+            stroke="var(--pp-border)"
+            strokeWidth="1"
+          />
+        </svg>
+        <div className="premium-probe-forward-chart-xaxis">
+          {days.map((day, i) => (
+            <span key={day}>{i % labelStep === 0 ? day.slice(5) : ""}</span>
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1811,10 +1881,10 @@ function ForwardChainView({ wsChains }: { wsChains?: ForwardChainData[] }) {
               <Gauge />
               转发组流量详情
             </h3>
-            <span>周期内每日 · 每台服务器消耗流量（GB）</span>
+            <span>周期内每日 · 按转发组切换 · 组内每台服务器堆叠</span>
           </header>
           <div className="body">
-            <ForwardTrafficHeatmap traffic={chain.traffic} />
+            <ForwardTrafficChart traffic={chain.traffic} />
           </div>
         </section>
       )}
