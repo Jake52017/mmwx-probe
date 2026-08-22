@@ -14,7 +14,15 @@ import {
   X,
   XCircle,
 } from "lucide-react";
-import type { ProbePingSeries, ProbeServer, ProbePayload } from "./types";
+import type {
+  ForwardChainBucket,
+  ForwardChainData,
+  ForwardChainTraffic,
+  ForwardTrafficServer,
+  ProbePingSeries,
+  ProbeServer,
+  ProbePayload,
+} from "./types";
 import { Twemoji } from "./Twemoji";
 import { FLAG_OPTIONS } from "./country-flag";
 import { displayServerName } from "./server-name";
@@ -1400,40 +1408,8 @@ function MultiTargetLatencyChart({
 }
 
 // ---- 转发链视图(网络状况 → 转发链) ----
+// 转发链数据类型定义在 ./types(随 ProbePayload.forward 走 WS 下发)。
 
-type ForwardChainServerData = {
-  name: string;
-  to_next_ms: number;
-  healthy: boolean;
-};
-type ForwardChainGroupData = {
-  name: string;
-  role: "entry" | "mid" | "exit";
-  to_next_ms: number;
-  servers: ForwardChainServerData[];
-};
-type ForwardChainBucket = { ts: number; e2e_ms: number; loss: number };
-type ForwardTrafficServer = {
-  name: string;
-  group: string;
-  role: string;
-  daily_gb: number[];
-  total_gb: number;
-};
-type ForwardChainTraffic = {
-  days: string[];
-  servers: ForwardTrafficServer[];
-  total_gb: number;
-};
-type ForwardChainData = {
-  name: string;
-  end_to_end_ms: number;
-  loss_pct: number;
-  groups: ForwardChainGroupData[];
-  bucket_sec: number;
-  trend: ForwardChainBucket[];
-  traffic?: ForwardChainTraffic | null;
-};
 type ForwardPayload = {
   enabled: boolean;
   chains: ForwardChainData[];
@@ -1624,11 +1600,14 @@ function ForwardTrafficHeatmap({ traffic }: { traffic: ForwardChainTraffic }) {
   );
 }
 
-function ForwardChainView() {
+function ForwardChainView({ wsChains }: { wsChains?: ForwardChainData[] }) {
+  // 优先用 WS payload 下发的转发链数据(实时);未走 WS 才拉 /api/forward 兜底。
+  const hasWS = wsChains !== undefined;
   const [data, setData] = useState<ForwardPayload | undefined>();
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
   const [chainIdx, setChainIdx] = useState(0);
   useEffect(() => {
+    if (hasWS) return; // WS 有数据就不走 HTTP 轮询
     const controller = new AbortController();
     const load = async () => {
       try {
@@ -1651,13 +1630,13 @@ function ForwardChainView() {
       controller.abort();
       window.clearInterval(timer);
     };
-  }, []);
+  }, [hasWS]);
 
-  const chains = data?.chains || [];
+  const chains = hasWS ? wsChains : data?.chains || [];
   const activeIdx = Math.min(chainIdx, Math.max(0, chains.length - 1));
   const chain = chains[activeIdx];
 
-  if (status === "loading" && !data) {
+  if (!hasWS && status === "loading" && !data) {
     return <div className="premium-probe-forward-empty">加载转发链数据…</div>;
   }
   if (!chain) {
@@ -1843,7 +1822,13 @@ function ForwardChainView() {
   );
 }
 
-function PremiumNetworkView({ servers }: { servers: ProbeServer[] }) {
+function PremiumNetworkView({
+  servers,
+  forwardChains,
+}: {
+  servers: ProbeServer[];
+  forwardChains?: ForwardChainData[];
+}) {
   const [netMode, setNetMode] = useState<"server" | "forward">("server");
   const [serverIndex, setServerIndex] = useState(0);
   const [target, setTarget] = useState("__all__");
@@ -1997,7 +1982,7 @@ function PremiumNetworkView({ servers }: { servers: ProbeServer[] }) {
           </div>
           <ForwardModeToggle mode={netMode} onChange={setNetMode} />
         </div>
-        <ForwardChainView />
+        <ForwardChainView wsChains={forwardChains} />
       </section>
     );
   }
@@ -2860,7 +2845,11 @@ export function PremiumProbePage({
 
       <main>
         {view === "network" ? (
-          <PremiumNetworkView key="network" servers={servers} />
+          <PremiumNetworkView
+            key="network"
+            servers={servers}
+            forwardChains={data?.forward}
+          />
         ) : view === "resource" ? (
           <PremiumResourceOverview
             key="resource"
