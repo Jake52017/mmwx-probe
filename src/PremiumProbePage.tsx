@@ -1536,14 +1536,23 @@ function ForwardTrafficHeatmap({ traffic }: { traffic: ForwardChainTraffic }) {
     }
     return m || 1;
   }, [traffic]);
+  const light =
+    typeof document !== "undefined" &&
+    document.documentElement.classList.contains("light");
   const cellStyle = (value: number) => {
     const t = Math.min(1, value / max);
-    const lo = [36, 29, 14];
-    const hi = [230, 184, 74];
+    const lo = light ? [244, 237, 221] : [36, 29, 14];
+    const hi = light ? [216, 180, 106] : [230, 184, 74];
     const mix = (i: number) => Math.round(lo[i] + (hi[i] - lo[i]) * t);
     return {
       background: `rgb(${mix(0)},${mix(1)},${mix(2)})`,
-      color: t > 0.5 ? "#1c1606" : "rgba(230,184,74,.72)",
+      color: light
+        ? t > 0.55
+          ? "#3a2e0e"
+          : "#9a8a5a"
+        : t > 0.5
+          ? "#1c1606"
+          : "rgba(230,184,74,.72)",
     };
   };
   const byGroup: {

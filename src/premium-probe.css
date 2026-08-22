@@ -4037,3 +4037,36 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ==== 转发链视图:布局稳定 + light 主题修正 ==== */
+/* 切换「按服务器/转发链」时竖向滚动条出现/消失会导致整页宽度抖动 → 固定滚动条槽 */
+:root.theme-premium {
+  scrollbar-gutter: stable;
+}
+/* 卡内浅色底块随主题自适应(dark 微亮 / light 微暗),替代写死的 rgba(255,255,255,.02) */
+.premium-probe-forward .rnode,
+.premium-probe-forward .grp {
+  background: color-mix(in srgb, currentColor 4%, transparent);
+}
+/* light 主题:暗色主题的浅灰字在奶白底上过淡,统一压深 */
+:root.light .premium-probe-forward-modes button,
+:root.light .premium-probe-forward-chaintabs button,
+:root.light .premium-probe-forward-chainbar .k,
+:root.light .premium-probe-forward-stats .stat .k,
+:root.light .premium-probe-forward-stats .stat .foot,
+:root.light .premium-probe-forward-stats .stat .v .u,
+:root.light .premium-probe-forward-card > header > span,
+:root.light .premium-probe-forward .rnode .gmeta,
+:root.light .premium-probe-forward .rlink .lbl,
+:root.light .premium-probe-forward .grp-agg,
+:root.light .premium-probe-forward .tconn .cl,
+:root.light .premium-probe-forward-heatmap th,
+:root.light .premium-probe-forward-heatmap tr.grp td,
+:root.light .premium-probe-forward-empty,
+:root.light .premium-probe-forward-trend-empty {
+  color: #8a7f64;
+}
+/* light 主题:近白值色(链路结构)在奶白底上不可见 → 用主题深色文字 */
+:root.light .premium-probe-forward-stats .stat.is-n .v {
+  color: #241e14;
+}
