@@ -43,6 +43,7 @@ import {
 } from "./server-detail-route";
 import { BlackGoldGlobe, type PremiumProbeRegion } from "./BlackGoldGlobe";
 import { ThemeSwitch } from "./ThemeSwitch";
+import { PasskeyLogin } from "./PasskeyLogin";
 import "./premium-probe.css";
 
 type ProbeData = ProbePayload;
@@ -1637,7 +1638,9 @@ function ForwardTrafficChart({ traffic }: { traffic: ForwardChainTraffic }) {
                 <b>{forwardTrafficFmt(srv.daily_gb[hover] || 0)}</b>
               </span>
             ))}
-            <span className="sum">合计 {forwardTrafficFmt(dayTotal[hover])}</span>
+            <span className="sum">
+              合计 {forwardTrafficFmt(dayTotal[hover])}
+            </span>
           </>
         ) : (
           <span className="total">
@@ -2920,6 +2923,7 @@ export function PremiumProbePage({
           <span className="premium-probe-live">实时更新</span>
           <div className="premium-probe-theme-switch">
             <ThemeSwitch appearance={data?.appearance} />
+            <PasskeyLogin />
           </div>
           <div className="premium-probe-view-toggle">
             <button
