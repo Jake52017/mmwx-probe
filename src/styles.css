@@ -438,11 +438,9 @@ button {
   cursor: pointer;
 }
 .metric-hover-detail {
-  position: absolute;
-  bottom: calc(100% + 7px);
-  left: 50%;
-  z-index: 20;
-  display: none;
+  /* 挂在 body 上,位置由 useHoverBubble 按触发元素算好(top 或 bottom 二选一) */
+  position: fixed;
+  z-index: 60;
   width: max-content;
   max-width: 250px;
   padding: 7px 10px;
@@ -460,10 +458,6 @@ button {
 .metric-hover-detail small {
   display: block;
   font: inherit;
-}
-.metric-button:hover .metric-hover-detail,
-.metric-button:focus-visible .metric-hover-detail {
-  display: block;
 }
 .meter {
   height: 6px;
