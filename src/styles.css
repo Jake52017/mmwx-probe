@@ -1591,7 +1591,10 @@ footer a:hover {
 }
 .region-globe {
   width: min(100%, 680px);
-  max-height: 410px;
+  /* viewBox 上下各留了 40 给伸出地球的弧线,高度跟着放宽,地球本身大小不变 */
+  max-height: 496px;
+  --arc-from: #3b82f6;
+  --arc-to: #a855f7;
   touch-action: none;
   cursor: grab;
   user-select: none;
@@ -1640,21 +1643,33 @@ footer a:hover {
   place-items: center;
   color: var(--muted);
 }
-.laser-segments {
+.globe-arcs {
+  pointer-events: none;
+}
+.arc-glow,
+.arc-core {
   fill: none;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
-  pointer-events: none;
 }
-.laser-segments.glow {
-  stroke: var(--primary);
-  stroke-width: 6;
-  opacity: 0.42;
+.arc-glow {
+  stroke-width: 5;
+  opacity: 0.55;
 }
-.laser-segments.core {
-  stroke: #fff;
-  stroke-width: 2.2;
-  opacity: 0.95;
+.arc-core {
+  stroke-width: 1.6;
+}
+.arc-from {
+  stop-color: var(--arc-from);
+}
+.arc-to {
+  stop-color: var(--arc-to);
+}
+.arc-packet {
+  fill: #fff;
+}
+.arc-packet-glow {
+  fill: color-mix(in srgb, var(--arc-from) 55%, transparent);
 }
 .region-point {
   fill: #fff;
@@ -1691,7 +1706,6 @@ footer a:hover {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .laser-segments,
   .region-point-halo {
     animation: none;
   }
@@ -1911,7 +1925,7 @@ footer a:hover {
     padding-inline: 6px;
   }
   .region-globe {
-    max-height: 330px;
+    max-height: 400px;
   }
 }
 
