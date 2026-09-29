@@ -3090,6 +3090,21 @@
   color: #dcd1bb;
 }
 
+.premium-probe-drawer-conn-chart .conn-sparkline-tip {
+  border-color: var(--pp-border);
+  color: #eadfc6;
+  background: var(--pp-panel);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.premium-probe-drawer-conn-chart .conn-sparkline-tip small {
+  color: #9c9281;
+}
+
+.premium-probe-drawer-conn-chart .conn-sparkline-dot {
+  border-color: var(--pp-panel);
+}
+
 .premium-probe-drawer-traffic > div {
   display: grid;
   min-height: 28px;
@@ -3560,6 +3575,15 @@
 
 :root.light .premium-probe-drawer-conn-chart {
   color: #5c5343;
+}
+
+:root.light .premium-probe-drawer-conn-chart .conn-sparkline-tip {
+  color: #2c251a;
+  box-shadow: 0 8px 24px rgba(74, 58, 28, 0.18);
+}
+
+:root.light .premium-probe-drawer-conn-chart .conn-sparkline-tip small {
+  color: #746b5c;
 }
 
 :root.light .premium-probe-map aside {
