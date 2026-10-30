@@ -1689,7 +1689,7 @@ function ServerCard({
   server: ProbeServer;
   index: number;
   triISP?: TriISPPublic;
-  /** 紧凑模式:只留三项占用、计费用量和网速,一屏放更多台 */
+  /** 紧凑模式:去掉延迟和回程线路,一屏放更多台(网速 / 连接数 / 开机以来同在一行,藏了也不省高度) */
   dense?: boolean;
 }) {
   const [trafficOpen, setTrafficOpen] = useState(false);
@@ -1933,11 +1933,10 @@ function ServerCard({
       </div>
       {(server.upload_speed !== undefined ||
         server.download_speed !== undefined ||
-        (!dense &&
-          (currentBoot.uplink !== undefined ||
-            currentBoot.downlink !== undefined ||
-            server.tcp_connections !== undefined ||
-            server.udp_connections !== undefined))) && (
+        currentBoot.uplink !== undefined ||
+        currentBoot.downlink !== undefined ||
+        server.tcp_connections !== undefined ||
+        server.udp_connections !== undefined) && (
         <div className="net-boxes">
           {(server.upload_speed !== undefined ||
             server.download_speed !== undefined) && (
@@ -1947,31 +1946,29 @@ function ServerCard({
               <span className="upload">↑ {speed(server.upload_speed)}</span>
             </div>
           )}
-          {!dense &&
-            (server.tcp_connections !== undefined ||
-              server.udp_connections !== undefined) && (
-              <button
-                type="button"
-                className="net-box"
-                title={CONN_COUNT_HINT}
-                disabled={!server.conn_history}
-                aria-label={server.conn_history ? "查看连接数历史" : undefined}
-                onClick={() => server.conn_history && setConnOpen(true)}
-              >
-                <small>系统连接数</small>
-                <span>TCP {connCount(server.tcp_connections)}</span>
-                <span>UDP {connCount(server.udp_connections)}</span>
-              </button>
-            )}
-          {!dense &&
-            (currentBoot.uplink !== undefined ||
-              currentBoot.downlink !== undefined) && (
-              <div className="net-box" title="本次开机以来网卡收发">
-                <small>开机以来</small>
-                <span>↓ {bytes(currentBoot.downlink, false)}</span>
-                <span>↑ {bytes(currentBoot.uplink, false)}</span>
-              </div>
-            )}
+          {(server.tcp_connections !== undefined ||
+            server.udp_connections !== undefined) && (
+            <button
+              type="button"
+              className="net-box"
+              title={CONN_COUNT_HINT}
+              disabled={!server.conn_history}
+              aria-label={server.conn_history ? "查看连接数历史" : undefined}
+              onClick={() => server.conn_history && setConnOpen(true)}
+            >
+              <small>系统连接数</small>
+              <span>TCP {connCount(server.tcp_connections)}</span>
+              <span>UDP {connCount(server.udp_connections)}</span>
+            </button>
+          )}
+          {(currentBoot.uplink !== undefined ||
+            currentBoot.downlink !== undefined) && (
+            <div className="net-box" title="本次开机以来网卡收发">
+              <small>开机以来</small>
+              <span>↓ {bytes(currentBoot.downlink, false)}</span>
+              <span>↑ {bytes(currentBoot.uplink, false)}</span>
+            </div>
+          )}
           {connOpen && (
             <ConnDialog
               serverIndex={index}

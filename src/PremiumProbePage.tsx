@@ -1,6 +1,8 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
+  ArrowDown,
+  ArrowUp,
   CalendarClock,
   CheckCircle2,
   ChevronRight,
@@ -2675,6 +2677,23 @@ function PremiumServerCard({
           value={disk === undefined ? "—" : `${disk.toFixed(0)}%`}
           percent={disk}
         />
+      </div>
+      {/* 实时上下行(#1212):数据本来就随探针下发,卡片上一直没显示 */}
+      <div className="premium-probe-card-speed" aria-label="实时上下行速度">
+        <div title="实时上行">
+          <ArrowUp />
+          <span>上行</span>
+          <strong>
+            {server.online ? formatBitSpeed(server.upload_speed || 0) : "—"}
+          </strong>
+        </div>
+        <div title="实时下行">
+          <ArrowDown />
+          <span>下行</span>
+          <strong>
+            {server.online ? formatBitSpeed(server.download_speed || 0) : "—"}
+          </strong>
+        </div>
       </div>
       <div className="premium-probe-server-footer">
         <div className="premium-probe-card-traffic">
