@@ -371,10 +371,18 @@ function countryCodeFromRegion(value?: string): string {
   const code = text.split(/[·,\s]+/)[0]?.toUpperCase() || "";
   return /^[A-Z]{2}$/.test(code) ? code : "";
 }
+// 管理员在主控探针设置里手动选的国旗(region)优先;region_country 是许可证服务按 IP 网段自动识别的,
+// 只在没手动选时兜底。反过来的话,IP 库认错国家(香港机被认成美国)时手动改了也不生效。
+function probeRegion(server: {
+  region?: string;
+  region_country?: string;
+}): string {
+  return server.region?.trim() || server.region_country || "";
+}
 function probeCountryCode(server: ProbeServer): string {
   return (
-    countryCodeFromRegion(server.region_country) ||
-    countryCodeFromRegion(server.region)
+    countryCodeFromRegion(server.region) ||
+    countryCodeFromRegion(server.region_country)
   );
 }
 function pct(used = 0, total = 0): number {
@@ -1699,7 +1707,7 @@ function ServerCard({
   );
   const trafficBubble = useHoverBubble();
   const name = server.name || `服务器 ${index + 1}`;
-  const flag = regionFlag(server.region_country || server.region);
+  const flag = regionFlag(probeRegion(server));
   const trafficUsed = billableTraffic(server);
   const currentBoot = bootTraffic(server);
   const formula = trafficFormulaLabel(server);
@@ -2283,9 +2291,7 @@ function ServerTable({ servers }: { servers: ProbeServer[] }) {
                             {displayServerName(
                               server.name,
                               `服务器 ${index + 1}`,
-                              regionFlag(
-                                server.region_country || server.region,
-                              ),
+                              regionFlag(probeRegion(server)),
                             )}
                           </Twemoji>
                         </a>
@@ -2294,7 +2300,7 @@ function ServerTable({ servers }: { servers: ProbeServer[] }) {
                           {displayServerName(
                             server.name,
                             `服务器 ${index + 1}`,
-                            regionFlag(server.region_country || server.region),
+                            regionFlag(probeRegion(server)),
                           )}
                         </Twemoji>
                       )}
@@ -2966,7 +2972,7 @@ export function App() {
             key: key || "__none__",
             label: key || "未设置地区",
             flag: regionFlag(
-              items[0]?.server.region_country || items[0]?.server.region,
+              items[0] ? probeRegion(items[0].server) : undefined,
             ),
             items,
           }))
@@ -3462,7 +3468,6 @@ export function App() {
                     className={[
                       "server-grid",
                       density === "dense" ? "dense" : "",
-                      groupBy === "region" ? "fill" : "",
                     ]
                       .filter(Boolean)
                       .join(" ")}

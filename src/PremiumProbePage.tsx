@@ -372,8 +372,9 @@ function resourcePercentage(used?: number, total?: number): number | undefined {
 
 function serverRegionKey(server: ProbeServer): string {
   return (
-    flagToCountryCode(server.region_country) ||
+    // 手动选的国旗优先,自动识别的国家兜底(见 App.tsx probeRegion)
     flagToCountryCode(server.region) ||
+    flagToCountryCode(server.region_country) ||
     "UNKNOWN"
   );
 }
