@@ -13,6 +13,9 @@
   color: #172033;
   background: #f5f7fb;
   font-synthesis: none;
+  /* 正文色变量:.server-meta / .globe-toggle / .unlock-popover 读它;原来从没定义,
+     暗色下一直落到写死的深色兜底,卡片底部续费行在深色背景上几乎看不见 */
+  --foreground: #172033;
   --primary: #2563eb;
   --surface: #fff;
   --border: #e2e8f0;
@@ -738,14 +741,6 @@ button.net-box:not(:disabled):hover {
   color: var(--muted);
   font-size: 11px;
 }
-.table-name small,
-.table-name a {
-  display: block;
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 400;
-}
 .ping-rows {
   display: flex;
   flex-direction: column;
@@ -786,7 +781,7 @@ button.net-box:not(:disabled):hover {
 }
 .ping-row-head-main > strong {
   flex-shrink: 0;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -865,6 +860,7 @@ button.net-box:not(:disabled):hover {
   border-color: #dbe1e8;
 }
 .route-badge-icon {
+  display: inline-flex;
   width: 16px;
   height: 16px;
   flex: none;
@@ -934,173 +930,254 @@ button.net-box:not(:disabled):hover {
 .table-scroll {
   overflow-x: auto;
 }
+/* 列表模式(与内置探针同形):每列定宽,一行三层「数值 / 细条 / 小字」;
+   在线状态并进名称前的圆点,离线行整行变灰 */
 .server-table {
   width: 100%;
-  min-width: 1240px;
+  min-width: 1180px;
   border-collapse: collapse;
   text-align: left;
   font-size: 13px;
   font-variant-numeric: tabular-nums;
 }
 .server-table th {
-  padding: 15px 14px;
+  padding: 10px 12px;
   color: var(--muted);
+  font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
 }
 .server-table td {
-  padding: 13px 14px;
+  padding: 12px;
   border-top: 1px solid var(--border);
   vertical-align: middle;
 }
+.server-table tbody tr {
+  transition: background-color 0.15s;
+}
+.server-table tbody tr:hover {
+  background: color-mix(in srgb, var(--muted) 6%, transparent);
+}
+.server-table tr.offline td {
+  color: var(--muted);
+}
 .server-table th:first-child,
 .server-table td:first-child {
-  padding-left: 20px;
+  padding-left: 18px;
 }
 .server-table th:last-child,
 .server-table td:last-child {
-  padding-right: 20px;
+  padding-right: 18px;
 }
 .table-name {
-  width: 210px;
-  max-width: 210px;
-  color: var(--foreground, #172033);
-  font-size: 14px;
-  font-weight: 650;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.table-name-line,
-.table-cumulative,
-.table-renewal,
-.table-renewal span,
-.table-renewal a {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  width: 250px;
+  max-width: 250px;
 }
 .table-name-line {
-  justify-content: space-between;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
 }
-.table-cumulative,
-.table-renewal {
-  flex-direction: column;
-  align-items: flex-start;
+.table-name-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
-.table-renewal a {
+.table-name-text a {
   color: inherit;
   text-decoration: none;
 }
-.table-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  white-space: nowrap;
+.table-name-text a:hover {
+  color: var(--primary);
+  text-decoration: underline;
 }
-.table-status i {
+.table-os {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.status-dot {
+  flex-shrink: 0;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: #ef4444;
+  box-shadow: 0 0 0 3px rgb(239 68 68 / 15%);
 }
-.table-status i.online {
+.status-dot.online {
   background: #22c55e;
+  box-shadow: 0 0 0 3px rgb(34 197 94 / 15%);
 }
-.table-metric {
-  width: 115px;
-}
-.table-resources {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  width: 350px;
-  gap: 8px 16px;
-}
-.table-resource-row {
-  min-width: 0;
-}
-.table-resource-row .table-metric {
-  width: auto;
-}
-.table-resource-row .table-traffic {
-  width: auto;
-  max-width: 100%;
-}
-.table-metric > span,
-.table-traffic > span {
-  display: block;
-  margin-bottom: 5px;
-  white-space: nowrap;
-}
-.table-metric-head {
-  display: flex !important;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.table-metric-head small {
-  color: var(--muted);
+.table-offline-tag {
+  flex-shrink: 0;
+  padding: 0 4px;
+  border: 1px solid rgb(239 68 68 / 30%);
+  border-radius: 4px;
+  color: #dc2626;
+  background: rgb(239 68 68 / 10%);
   font-size: 10px;
-  font-weight: 400;
+  font-weight: 500;
+  line-height: 16px;
 }
-.table-name-line a {
-  min-width: 0;
-  overflow: hidden;
-  color: inherit;
-  text-decoration: none;
-  text-overflow: ellipsis;
-}
-.table-name-line a:hover {
-  color: var(--primary);
-  text-decoration: underline;
-}
-.table-metric .meter,
-.table-traffic .meter {
-  height: 4px;
-  margin-top: 0;
-}
-.table-speed {
+.table-renewal {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: var(--primary);
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin-top: 4px;
+  padding-left: 16px;
+  color: var(--muted);
+  font-size: 12px;
   white-space: nowrap;
 }
-.table-speed > span {
+.table-renewal span,
+.table-renewal a {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-}
-.table-speed small {
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 400;
-}
-.table-traffic {
-  width: 190px;
-}
-.table-traffic-button {
-  padding: 0;
-  border: 0;
   color: inherit;
-  background: none;
-  text-align: left;
-  cursor: pointer;
+  text-decoration: none;
 }
-.table-traffic small {
+.table-renewal a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.table-renewal .warning {
+  color: #d97706;
+}
+.table-col-metric {
+  width: 118px;
+}
+.table-col-traffic {
+  width: 160px;
+}
+.table-col-traffic .metric-button {
   display: block;
-  margin: 3px 0;
-  color: var(--muted);
+}
+.table-metric {
+  min-width: 0;
+}
+.table-metric-value {
+  display: block;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 20px;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
-.table-routes {
-  min-width: 300px;
+.table-metric .meter {
+  height: 4px;
 }
-.table-routes .return-route-badges {
-  margin: 0;
-  padding: 0;
-  border: 0;
+.table-metric .metric-sub {
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 16px;
+}
+.table-speed,
+.table-cumulative {
+  display: grid;
+  line-height: 20px;
+  white-space: nowrap;
+}
+.table-speed .download {
+  color: #16a34a;
+}
+.table-speed .upload {
+  color: #ea580c;
+}
+.table-cumulative {
+  color: var(--muted);
+  font-size: 12px;
+}
+.table-col-ping {
+  min-width: 230px;
+}
+.table-ping-lines {
+  display: grid;
+  gap: 6px;
+}
+.table-ping-line {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) 4.75rem;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 16px;
+}
+.table-ping-line > small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.table-ping-value {
+  overflow: hidden;
+  text-align: right;
+  white-space: nowrap;
+}
+.table-ping-value strong {
+  font-weight: 500;
+}
+.table-ping-value em {
+  margin-left: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  font-style: normal;
+}
+.table-ping-value em:first-child {
+  margin-left: 0;
+  font-size: 12px;
+}
+.table-ping-value em.warning {
+  color: #ca8a04;
+}
+.table-route-list {
+  display: grid;
+  width: 9.5rem;
+  gap: 4px;
+}
+.table-route {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--muted) 6%, transparent);
+  font-size: 11px;
+  line-height: 18px;
+}
+.table-route small {
+  flex-shrink: 0;
+  font-size: inherit;
+  opacity: 0.75;
+}
+.table-route strong {
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.table-route.gold {
+  border-color: rgb(252 211 77 / 80%);
+  color: #92400e;
+  background: #fffbeb;
+}
+:root.dark .table-route.gold {
+  border-color: rgb(180 83 9 / 60%);
+  color: #fcd34d;
+  background: rgb(69 26 3 / 40%);
+}
+:root.dark .table-offline-tag {
+  color: #f87171;
 }
 .metric-detail {
   display: block;
@@ -1235,53 +1312,6 @@ button.net-box:not(:disabled):hover {
 .conn-legend-dot.disk {
   stroke: var(--res-disk, #f59e0b);
   background: var(--res-disk, #f59e0b);
-}
-.table-ping {
-  width: 105px;
-  padding: 0;
-  border: 0;
-  color: inherit;
-  background: none;
-  cursor: pointer;
-}
-.table-ping-pair {
-  display: grid;
-  grid-template-columns: 120px;
-  gap: 8px;
-}
-.table-ping small {
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 400;
-}
-.table-ping > span {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 5px;
-}
-.table-ping b {
-  color: var(--muted);
-  font-weight: 500;
-}
-.table-ping em {
-  display: flex;
-  height: 16px;
-  gap: 2px;
-}
-.table-ping em i {
-  flex: 1;
-  border-radius: 2px;
-  background: #cbd5e1;
-}
-.table-ping em i.good {
-  background: #22c55e;
-}
-.table-ping em i.warn {
-  background: #f59e0b;
-}
-.table-ping em i.bad {
-  background: #ef4444;
 }
 .dash {
   color: var(--muted);
@@ -1766,6 +1796,7 @@ footer a:hover {
 
 :root.dark {
   color: #e5e7eb;
+  --foreground: #e5e7eb;
   --surface: #111827;
   --border: #334155;
   --muted: #94a3b8;
@@ -2587,4 +2618,625 @@ footer a:hover {
 .seg-bar > i {
   display: block;
   height: 100%;
+}
+
+/* ============================================================
+   天真(sweet)—— 与主控天真主题同一套:草莓牛奶底 + 粉色波点、黏土风卡片
+   (粉色描边 + 底部实色厚度)、果冻按钮、糖果条纹进度条;夜晚为「星空糖果」深紫蓝。
+   放在文件末尾:后面没有同特异性的规则能再盖掉它。夜晚用 .theme-sweet.dark(0,3,0)
+   压过通用的 :root.dark。
+   ============================================================ */
+:root.theme-sweet {
+  font-family:
+    ui-rounded,
+    "SF Pro Rounded",
+    "Hiragino Maru Gothic ProN",
+    Nunito,
+    Inter,
+    system-ui,
+    -apple-system,
+    "PingFang SC",
+    sans-serif;
+  color: #5a3d55;
+  --foreground: #5a3d55;
+  --primary: #e8508f;
+  --surface: #ffffff;
+  --border: #ffd3e5;
+  --muted: #86667e;
+  --radius: 22px;
+  --page-bg: #fff6fa;
+  --shadow: 0 14px 28px -14px rgba(236, 92, 153, 0.32), 0 4px 0 #ffe3ef;
+  --sweet-card2: #fff2f7;
+  --sweet-hero: #ffe0ee;
+  --sweet-dot: #ffe1ee;
+  --sweet-pink: #ff7db2;
+  --sweet-btn-edge: #c93c7b;
+  --sweet-btn-ink: #ffffff;
+  --sweet-rose: #b53170;
+  --sweet-lav: #b7a2ff;
+  --sweet-float: 0 16px 36px -10px rgba(236, 92, 153, 0.35);
+  --globe-ocean-light: #ffe0ee;
+  --globe-ocean-dark: #ffc4dc;
+}
+:root.theme-sweet.dark {
+  color: #fcebf5;
+  --foreground: #fcebf5;
+  --primary: #ff8cc3;
+  --surface: #2f2547;
+  --border: #4a3b6b;
+  --muted: #c4a9cf;
+  --page-bg: #211934;
+  --shadow: 0 16px 30px -14px rgba(0, 0, 0, 0.6), 0 4px 0 #1a1329;
+  --sweet-card2: #392d56;
+  --sweet-hero: #4a2f55;
+  --sweet-dot: #2e2448;
+  --sweet-pink: #ff8cc3;
+  --sweet-btn-edge: #c4669a;
+  --sweet-btn-ink: #2a1b33;
+  --sweet-rose: #ff9acb;
+  --sweet-lav: #c3b1ff;
+  --sweet-float: 0 18px 40px -12px rgba(0, 0, 0, 0.65);
+  --globe-ocean-light: #392d56;
+  --globe-ocean-dark: #4a3b6b;
+}
+:root.theme-sweet .app-shell {
+  background-color: var(--page-bg);
+  background-image: radial-gradient(var(--sweet-dot) 2.2px, transparent 2.6px);
+  background-size: 26px 26px;
+}
+
+/* 顶栏:与页面同底,去掉分隔线;按钮做成胶囊 */
+:root.theme-sweet .topbar {
+  border-bottom-color: transparent;
+  background: color-mix(in srgb, var(--page-bg) 88%, transparent);
+}
+:root.theme-sweet .topbar h1,
+:root.theme-sweet .modal h2,
+:root.theme-sweet .server-title h2 {
+  letter-spacing: 0;
+}
+:root.theme-sweet .topbar button,
+:root.theme-sweet .ranges button {
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 3px 0 var(--border);
+}
+:root.theme-sweet .topbar button:active,
+:root.theme-sweet .ranges button:active,
+:root.theme-sweet .filters button:active {
+  transform: translateY(2px);
+}
+:root.theme-sweet .topbar button.active,
+:root.theme-sweet .ranges button.active {
+  border-color: var(--primary);
+  color: var(--sweet-btn-ink);
+  background: var(--primary);
+  box-shadow: 0 3px 0 var(--sweet-btn-edge);
+}
+
+/* 卡片:黏土风 —— 2px 粉色描边 + 大圆角 + 底部实色厚度 */
+:root.theme-sweet .kpi,
+:root.theme-sweet .globe-mini,
+:root.theme-sweet .probe-toolbar,
+:root.theme-sweet .server-card,
+:root.theme-sweet .server-table-wrap,
+:root.theme-sweet .globe-card,
+:root.theme-sweet .kpi-grid.six {
+  border-width: 2px;
+  border-radius: 28px;
+}
+:root.theme-sweet .kpi-grid.six > .kpi {
+  border: 0;
+  border-radius: 0;
+  box-shadow: 1px 1px 0 0 var(--border);
+}
+:root.theme-sweet button.kpi:hover {
+  border-color: var(--sweet-pink);
+}
+:root.theme-sweet .server-title {
+  border-bottom-color: var(--border);
+}
+/* 服务器名前一朵小花(与主控天真主题的卡片标题一致)。名字在一个 display:block 的 span 里,
+   h2 改成 flex 才能让花和名字同排,span 保持可收缩以留住省略号 */
+:root.theme-sweet .server-title h2 {
+  display: flex;
+  align-items: center;
+}
+:root.theme-sweet .server-title h2 > span {
+  min-width: 0;
+}
+:root.theme-sweet .server-title h2::before {
+  content: "";
+  flex: none;
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  margin-right: 0.3em;
+  vertical-align: -0.2em;
+  background: url("/sweet-flower.svg") center / contain no-repeat;
+}
+:root.theme-sweet .net-boxes,
+:root.theme-sweet .speed,
+:root.theme-sweet .cumulative-traffic,
+:root.theme-sweet .conn-counts,
+:root.theme-sweet .ping-grid,
+:root.theme-sweet .return-route-badges,
+:root.theme-sweet .server-table td {
+  border-color: var(--border);
+}
+/* 卡中卡(网络格):浅粉块 + 内卡圆角 */
+:root.theme-sweet .net-box {
+  border-radius: 16px;
+  background: var(--sweet-card2);
+}
+:root.theme-sweet button.net-box:not(:disabled):hover {
+  background: var(--sweet-hero);
+}
+
+/* 进度条:糖果条纹 */
+:root.theme-sweet .meter {
+  height: 7px;
+  background: var(--sweet-card2);
+}
+:root.theme-sweet .meter i {
+  background-color: var(--sweet-pink);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.35) 0 6px,
+    transparent 6px 12px
+  );
+}
+:root.theme-sweet .meter i.warn {
+  background-color: #ffc75a;
+}
+:root.theme-sweet .meter i.bad {
+  background-color: #ff6f8e;
+}
+
+/* 筛选条:搜索框、分段组、按钮都是胶囊;选中项是实心草莓粉果冻 */
+:root.theme-sweet .probe-search {
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  background: var(--sweet-card2);
+}
+:root.theme-sweet .filters button {
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  color: inherit;
+}
+:root.theme-sweet .filters button.active {
+  border-color: var(--primary);
+  color: var(--sweet-btn-ink);
+  background: var(--primary);
+  box-shadow: 0 3px 0 var(--sweet-btn-edge);
+}
+:root.theme-sweet .filter-seg,
+:root.theme-sweet .density-toggle {
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  background: var(--sweet-card2);
+}
+:root.theme-sweet .filters .filter-seg > button,
+:root.theme-sweet .filters .density-toggle > button {
+  border: 0;
+  border-radius: 999px;
+  padding-inline: 14px;
+  font-weight: 700;
+}
+:root.theme-sweet .filters .filter-seg > button[aria-pressed="true"],
+:root.theme-sweet .filters .density-toggle > button.active {
+  color: var(--sweet-btn-ink);
+  background: var(--primary);
+  box-shadow: 0 3px 0 var(--sweet-btn-edge);
+}
+:root.theme-sweet .filters .filter-seg > button[aria-pressed="true"] > em {
+  color: inherit !important;
+}
+:root.theme-sweet .toolbar-end .region-filter {
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  background: var(--sweet-card2);
+}
+
+/* 弹窗:大圆角 + 顶上一条斜纹纸胶带 */
+:root.theme-sweet .modal {
+  border-width: 2px;
+  border-radius: 30px;
+  box-shadow: var(--sweet-float);
+}
+:root.theme-sweet .modal::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  z-index: 2;
+  width: 84px;
+  height: 18px;
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 125, 178, 0.6) 0 6px,
+    rgba(255, 255, 255, 0.6) 6px 12px
+  );
+  transform: translateX(-50%) rotate(-3deg);
+  pointer-events: none;
+}
+:root.theme-sweet.dark .modal::before {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 140, 195, 0.6) 0 6px,
+    rgba(195, 177, 255, 0.5) 6px 12px
+  );
+}
+:root.theme-sweet .unlock-tabs {
+  border-radius: 999px;
+  background: var(--sweet-card2);
+}
+:root.theme-sweet .unlock-tabs button {
+  border-radius: 999px;
+}
+:root.theme-sweet .unlock-tabs button[data-active] {
+  color: var(--sweet-btn-ink);
+  background: var(--primary);
+}
+
+/* 许可证称号铭牌:实心草莓粉胶囊 */
+:root.theme-sweet .probe-license-nameplate {
+  border-color: transparent;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--sweet-btn-ink);
+  box-shadow: 0 3px 0 var(--sweet-btn-edge);
+}
+
+/* ============================================================
+   液态玻璃(glass)—— 与主控液态玻璃主题同一套:极光背景 + 半透明壳体。
+   材质三层:① blur + saturate(只模糊会把背景冲淡发灰,要把饱和拉回来)
+            ② 一像素顶部高光边(玻璃的厚度感)③ 左上角斜向折射高光。
+   材质整体放在各容器的 ::before 上,内容刷新时只重绘内容层,毛玻璃的合成结果可以缓存
+   (主控 #536:几十张卡同时刷新、材质画在元素自身上会整片频闪)。
+   主控还支持自定义壁纸与色调,探针接口目前只下发主题名,这里用默认极光。
+   ============================================================ */
+:root.theme-glass {
+  color: #16202b;
+  --foreground: #16202b;
+  --primary: #0c6d92;
+  --surface: rgba(255, 255, 255, 0.5);
+  --border: rgba(22, 32, 43, 0.14);
+  --muted: rgba(22, 32, 43, 0.66);
+  --radius: 14px;
+  --page-bg: #e8eef5;
+  --shadow: 0 18px 40px rgba(22, 32, 43, 0.16);
+  --g-card-base: rgba(232, 238, 245, 0.3);
+  --g-card-fill: rgba(255, 255, 255, 0.5);
+  --g-inset-fill: rgba(255, 255, 255, 0.42);
+  --g-edge: rgba(255, 255, 255, 0.75);
+  --g-ring: rgba(22, 32, 43, 0.09);
+  --g-sheen: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.55),
+    rgba(255, 255, 255, 0) 160px
+  );
+  --g-scrim: rgba(232, 238, 245, 0.22);
+  --g-tone-a: 76, 184, 245;
+  --g-tone-b: 240, 163, 91;
+  --g-tone-c: 201, 214, 255;
+  --g-tone-a-alpha: 0.42;
+  --g-tone-b-alpha: 0.36;
+  --g-tone-c-alpha: 0.22;
+  --globe-ocean-light: #d6ebf8;
+  --globe-ocean-dark: #b4dbf2;
+}
+:root.theme-glass.dark {
+  color: #eef3f8;
+  --foreground: #eef3f8;
+  --primary: #4cb8f5;
+  --surface: rgba(255, 255, 255, 0.085);
+  --border: rgba(255, 255, 255, 0.16);
+  --muted: rgba(238, 243, 248, 0.68);
+  --page-bg: #0b1220;
+  --shadow: 0 18px 40px rgba(2, 6, 14, 0.45);
+  --g-card-base: rgba(11, 18, 32, 0.46);
+  --g-card-fill: rgba(255, 255, 255, 0.085);
+  --g-inset-fill: rgba(255, 255, 255, 0.06);
+  --g-edge: rgba(255, 255, 255, 0.22);
+  --g-ring: rgba(255, 255, 255, 0.12);
+  --g-sheen: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16),
+    rgba(255, 255, 255, 0) 160px
+  );
+  --g-scrim: rgba(6, 10, 18, 0.22);
+  --g-tone-a-alpha: 0.55;
+  --g-tone-b-alpha: 0.42;
+  --g-tone-c-alpha: 0.3;
+  --globe-ocean-light: #14324c;
+  --globe-ocean-dark: #1d4a6c;
+}
+/* 背景层:极光 + 遮罩,挂在 body 伪元素上,整页固定不随滚动 */
+:root.theme-glass {
+  background: var(--page-bg);
+}
+/* body 必须透明:根元素有背景时 body 的背景不再传给画布,而是画在 body 盒子上,
+   正好压住下面 z-index 为负的极光层 */
+:root.theme-glass body {
+  background: transparent;
+}
+:root.theme-glass body::before,
+:root.theme-glass body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+:root.theme-glass body::before {
+  background-image:
+    radial-gradient(
+      1100px 620px at 8% 10%,
+      rgba(var(--g-tone-a), var(--g-tone-a-alpha)),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 560px at 92% 18%,
+      rgba(var(--g-tone-b), var(--g-tone-b-alpha)),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 700px at 55% 100%,
+      rgba(var(--g-tone-c), var(--g-tone-c-alpha)),
+      transparent 62%
+    );
+}
+:root.theme-glass body::after {
+  z-index: -1;
+  background-color: var(--g-scrim);
+  /* 极淡噪点抖动,打散大面积低对比渐变的 8 位色带(同主控) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)' opacity='0.022'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+:root.theme-glass .app-shell {
+  background: transparent;
+}
+/* 壳体材质:卡片 / 汇总 / 工具条 / 表格 / 地球 / 弹窗 / 顶栏 */
+:root.theme-glass .kpi-grid.six,
+:root.theme-glass .kpi-grid.three > .kpi,
+:root.theme-glass .globe-mini,
+:root.theme-glass .probe-toolbar,
+:root.theme-glass .server-card,
+:root.theme-glass .server-table-wrap,
+:root.theme-glass .globe-card,
+:root.theme-glass .modal,
+:root.theme-glass .topbar {
+  border-color: var(--g-ring);
+  background: transparent;
+  box-shadow:
+    inset 0 1px 0 var(--g-edge),
+    var(--shadow);
+  isolation: isolate;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+:root.theme-glass .kpi-grid.six,
+:root.theme-glass .kpi-grid.three > .kpi,
+:root.theme-glass .globe-mini,
+:root.theme-glass .globe-card {
+  position: relative;
+}
+:root.theme-glass .kpi-grid.six::before,
+:root.theme-glass .kpi-grid.three > .kpi::before,
+:root.theme-glass .globe-mini::before,
+:root.theme-glass .probe-toolbar::before,
+:root.theme-glass .server-card::before,
+:root.theme-glass .server-table-wrap::before,
+:root.theme-glass .globe-card::before,
+:root.theme-glass .modal::before,
+:root.theme-glass .topbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--g-card-base);
+  background-image:
+    var(--g-sheen),
+    linear-gradient(0deg, var(--g-card-fill), var(--g-card-fill));
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  backdrop-filter: blur(22px) saturate(1.6);
+  pointer-events: none;
+}
+/* 顶栏贴着页面顶,不要圆角和外投影,只留底部一道细线 */
+:root.theme-glass .topbar {
+  box-shadow: none;
+  border-bottom-color: var(--g-ring);
+}
+/* 汇总格之间的分隔线换成玻璃细环 */
+:root.theme-glass .kpi-grid.six > .kpi {
+  box-shadow: 1px 1px 0 0 var(--g-ring);
+}
+/* 内嵌控件:更薄一层玻璃(卡中卡、搜索框、分段按钮、顶栏按钮) */
+:root.theme-glass .net-box,
+:root.theme-glass .probe-search,
+:root.theme-glass .filter-seg,
+:root.theme-glass .density-toggle,
+:root.theme-glass .topbar button:not(.active),
+:root.theme-glass .ranges button:not(.active),
+:root.theme-glass .filters > button:not(.active),
+:root.theme-glass .table-route:not(.gold) {
+  border-color: var(--g-ring);
+  background: var(--g-inset-fill);
+}
+:root.theme-glass button.net-box:not(:disabled):hover,
+:root.theme-glass .topbar button:not(.active):hover {
+  background: var(--g-card-fill);
+}
+:root.theme-glass .filters .filter-seg > button[aria-pressed="true"],
+:root.theme-glass .filters .density-toggle > button.active {
+  background: var(--g-card-fill);
+  box-shadow:
+    inset 0 1px 0 var(--g-edge),
+    0 1px 2px rgb(0 0 0 / 0.08);
+}
+:root.theme-glass .meter {
+  background: var(--g-ring);
+}
+:root.theme-glass .server-table td,
+:root.theme-glass .net-boxes,
+:root.theme-glass .ping-grid,
+:root.theme-glass .return-route-badges,
+:root.theme-glass .server-title {
+  border-color: var(--g-ring);
+}
+:root.theme-glass .server-table tbody tr:hover {
+  background: var(--g-inset-fill);
+}
+/* 弹窗背后的遮罩:淡一点,让玻璃有东西可折射 */
+:root.theme-glass .modal-backdrop {
+  background: rgba(15, 23, 42, 0.32);
+}
+:root.theme-glass.dark .modal-backdrop {
+  background: rgba(2, 6, 14, 0.5);
+}
+
+/* ============================================================
+   Meow —— 与主控 Meow 主题(MeowX 客户端同一套品牌语言)一致:奶油底、玫红强调、
+   圆润大卡片。分层靠底色,不靠描边和硬阴影:页面奶油 → 卡片白 → 卡片里的控件回到奶油灰。
+   主控可另选「海派」字体,探针接口目前不下发该设置,这里用主题自带的圆体标题。
+   ============================================================ */
+:root.theme-meow {
+  color: #2a2130;
+  --foreground: #2a2130;
+  --primary: #b02e63;
+  --surface: #ffffff;
+  --border: rgba(42, 33, 48, 0.1);
+  --muted: #665a69;
+  --radius: 24px;
+  --page-bg: #fbf7f2;
+  --shadow: none;
+  --meow-card2: #f3ece4;
+  --meow-hero: #fce4ec;
+  --meow-strong: #7a5647;
+  --meow-strong-ink: #fbf7f2;
+  --meow-float: 0 10px 30px rgba(42, 33, 48, 0.14);
+  --globe-ocean-light: #fce4ec;
+  --globe-ocean-dark: #f9cbda;
+}
+:root.theme-meow.dark {
+  color: #f7f0f3;
+  --foreground: #f7f0f3;
+  --primary: #f7b6cb;
+  --surface: #1f1a25;
+  --border: rgba(255, 255, 255, 0.1);
+  --muted: #b9adbb;
+  --page-bg: #141118;
+  --meow-card2: #2a2431;
+  --meow-hero: #33202b;
+  --meow-strong: #f7f0f3;
+  --meow-strong-ink: #2a2130;
+  --meow-float: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --globe-ocean-light: #2a2431;
+  --globe-ocean-dark: #33202b;
+}
+:root.theme-meow .topbar h1,
+:root.theme-meow .server-title h2,
+:root.theme-meow .modal h2,
+:root.theme-meow .kpi > strong {
+  font-family:
+    ui-rounded, "SF Pro Rounded", "Hiragino Maru Gothic ProN", Inter, system-ui,
+    sans-serif;
+}
+/* 顶栏与页面同底、无分隔线;图标按钮去框,选中态是实心胶囊 */
+:root.theme-meow .topbar {
+  border-bottom-color: transparent;
+  background: color-mix(in srgb, var(--page-bg) 90%, transparent);
+}
+:root.theme-meow .topbar button,
+:root.theme-meow .ranges button {
+  border-color: transparent;
+  border-radius: 12px;
+  background: transparent;
+}
+:root.theme-meow .topbar button:hover,
+:root.theme-meow .ranges button:hover {
+  background: var(--meow-card2);
+}
+:root.theme-meow .topbar button.active,
+:root.theme-meow .ranges button.active {
+  border-color: var(--meow-strong);
+  color: var(--meow-strong-ink);
+  background: var(--meow-strong);
+}
+/* 卡片:白底大圆角、无描边无阴影,靠与奶油底的色差分层 */
+:root.theme-meow .kpi,
+:root.theme-meow .kpi-grid.six,
+:root.theme-meow .globe-mini,
+:root.theme-meow .probe-toolbar,
+:root.theme-meow .server-card,
+:root.theme-meow .server-table-wrap,
+:root.theme-meow .globe-card {
+  border-color: transparent;
+  border-radius: 28px;
+}
+:root.theme-meow .kpi-grid.six > .kpi {
+  border-radius: 0;
+}
+:root.theme-meow .modal {
+  border-color: transparent;
+  border-radius: 28px;
+  box-shadow: var(--meow-float);
+}
+/* 有告警的卡片仍要一眼看出来:保留红色描边 */
+:root.theme-meow .server-card[data-alert="true"] {
+  border-color: color-mix(in srgb, #ef4444 55%, transparent);
+}
+/* 卡中卡与控件:回到奶油灰,圆角 18 / 12 */
+:root.theme-meow .net-box {
+  border-radius: 18px;
+  background: var(--meow-card2);
+}
+:root.theme-meow button.net-box:not(:disabled):hover {
+  background: var(--meow-hero);
+}
+:root.theme-meow .probe-search {
+  border-color: transparent;
+  border-radius: 999px;
+  background: var(--meow-card2);
+}
+:root.theme-meow .probe-search input {
+  background: transparent;
+}
+:root.theme-meow .filter-seg,
+:root.theme-meow .density-toggle {
+  border-radius: 999px;
+  background: var(--meow-card2);
+}
+:root.theme-meow .filters .filter-seg > button,
+:root.theme-meow .filters .density-toggle > button {
+  border-radius: 999px;
+}
+:root.theme-meow .filters .filter-seg > button[aria-pressed="true"],
+:root.theme-meow .filters .density-toggle > button.active {
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgb(42 33 48 / 0.12);
+}
+:root.theme-meow .filters > button {
+  border-color: transparent;
+  border-radius: 999px;
+  background: var(--meow-card2);
+}
+:root.theme-meow .filters > button.active {
+  border-color: var(--meow-strong);
+  color: var(--meow-strong-ink);
+  background: var(--meow-strong);
+}
+:root.theme-meow .meter {
+  background: var(--meow-card2);
+}
+:root.theme-meow .table-route:not(.gold) {
+  border-color: transparent;
+  background: var(--meow-card2);
+}
+:root.theme-meow .server-table tbody tr:hover {
+  background: color-mix(in srgb, var(--meow-hero) 45%, transparent);
 }
